@@ -1,107 +1,73 @@
 #include<stdio.h>
-int main() {
-    int n, m, x = 3, y, z = 0;
-	char a[x][x];
-	printf("For putting the x or o in your desired location you must enter the coordinates of the point. Select from the given below.\n");
-	printf("(1 1) (1 2) (1 3) (2 1) (2 2) (2 3) (3 1) (3 2) (3 3)\n");
-	for(int i = 0; i < x; i++) {
-		for(int j = 0; j < x; j++) {
-			a[i][j] = '_';
-		}
-	}
+
+void display(char a[3][3]) {
 	printf("\n");
-        for(int j = 0; j < x; j++) {
-            for(int k = 0; k < x; k++) {
-                printf("  %c",a[j][k]);
-            }
-            printf("\n");
+	for(int i = 0; i < 3; i++) {
+        for(int j = 0; j < 3; j++) {
+    	    printf("%c  ",a[i][j]);
         }
         printf("\n");
-	y = x * x;
-    for(int i = 1; i <= y; i++) {
-        for(;;) {
-            if(i % 2 != 0) {
-                printf("Player 1 chance\n");
-            } else {
-                printf("Player 2 chance\n");
-            }
-            scanf("%d %d",&n,&m);
-            if((n >= 1 && n <= x) && (m >= 1 && m <= x)) {
-                if(a[n-1][m-1] == '_') {
-                    break;
-                }
-            } 
-            printf("Wrong input retry\n");
-        }
-        if(i % 2 != 0) {
-            a[n-1][m-1] = 'x';
-        } else {
-            a[n-1][m-1] = 'o';
-        }
-        printf("\n");
-        for(int j = 0; j < x; j++) {
-            for(int k = 0; k < x; k++) {
-                printf("%c  ",a[j][k]);
-            }
-            printf("\n");
-        }
-        printf("\n");
-        for(int j = 0; j < x; j++) {
-            for(int k = 0; k < x; k++) {
-				if((a[j][k] == a[j][x-1]) && a[j][k] != '_') {
-					if(k == (x - 1)) {
-						if(a[j][j] == 'x'){
-							printf("Player 1 has won");
-						} else {
-							printf("Player 2 has won");
-						}
-						return 0;
-					}
-				} else {
-					break;
-				}
-			}
-			for(int k = 0; k < x; k++) {
-				if((a[k][j] == a[x-1][j]) && a[k][j] != '_') {
-					if(k == (x - 1)) {
-						if(a[j][j] == 'x'){
-							printf("Player 1 has won");
-						} else {
-							printf("Player 2 has won");
-						}
-						return 0;
-					}
-				} else {
-					break;
-				}
-			}
-        }
-		for(int j = 0; j < x; j++) {
-			if((a[j][j] == a[x-1][x-1]) && a[j][j] != '_'){
-				if(j == (x - 1)){
-					if(a[j][j] == 'x'){
-						printf("Player 1 has won");
-					} else {
-						printf("Player 2 has won");
-					}
-					return 0;
-				}
-			} else {
+    }
+	printf("\n");
+}
+
+int checkResult(char a[3][3]) {
+	char ch = '_';
+	if(a[0][0] != '_' && a[0][0] == a[1][1] && a[1][1] == a[2][2]) {
+		ch = a[0][0];
+	} else if(a[0][2] != '_' && a[0][2] == a[1][1] && a[1][1] == a[2][0]) {
+		ch = a[0][2];
+	} else {
+		for (int i = 0; i < 3; i++) {
+			if (a[i][0] != '_' && a[i][0] == a[i][1] && a[i][1] == a[i][2]) {
+				ch = a[i][0];
+				break;
+			} else if (a[0][i] != '_' && a[0][i] == a[1][i] && a[1][i] == a[2][i]) {
+				ch = a[0][i];
 				break;
 			}
 		}
-		for(int j = 0, k = x - 1; j < x; j++, k--) {
-			if((a[(x-1)/2][(x-1)/2] == a[j][k]) && a[j][k] != '_'){
-				if(j == (x - 1)){
-					if(a[j][k] == 'x'){
-						printf("Player 1 has won");
-					} else {
-						printf("Player 2 has won");
-					}
-					return 0;
-				}
-			}
+	}
+	if(ch == 'x') {
+		printf("Player 1 has won\n");
+		return 1;
+	} else if(ch == 'o') {
+		printf("Player 2 has won\n");
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+int input(char a[3][3], int i) {
+	int n,m;
+	while(1) {
+		if(i % 2 != 0) {
+			printf("Player 1 chance: ");
+		} else {
+			printf("Player 2 chance: ");
 		}
+		scanf("%d %d",&n,&m);
+		if((n >= 1 && n <= 3) && (m >= 1 && m <= 3)) {
+			if(a[n-1][m-1] == '_') {
+				break;
+			}
+		} 
+		printf("Wrong Input Retry: ");
+	}
+	if(i % 2 != 0) {
+		a[n-1][m-1] = 'x';
+	} else {
+		a[n-1][m-1] = 'o';
+	}
+	display(a);
+	return checkResult(a);
+}
+
+int main() {
+    for(int i = 1; i <= 9; i++) {
+        if(input(a,i))
+			return 0;
     }
     printf("Match is draw");
     return 0;
